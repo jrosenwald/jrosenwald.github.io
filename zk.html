@@ -12,15 +12,28 @@
             padding: 0;
             background-color: #f0f0f0;
             overflow: hidden;
+            touch-action: none;
         }
         #game-container {
             position: relative;
-            width: 600px;
+            width: 100%;
+            max-width: 600px;
             height: 500px;
-            margin: 20px auto;
+            margin: 10px auto;
             background-color: #82d173;
             border: 3px solid #333;
             overflow: hidden;
+            box-sizing: border-box;
+        }
+        @media (max-width: 640px) {
+            #game-container {
+                height: 400px;
+                margin: 5px auto;
+            }
+            h1 {
+                font-size: 24px;
+                margin: 10px 0;
+            }
         }
         .road {
             position: absolute;
@@ -73,6 +86,35 @@
         }
         #restart:hover, #restart-win:hover {
             background-color: #2980b9;
+        }
+        
+        /* Mobile controls */
+        #mobile-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 20;
+        }
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            margin: 0 5px;
+            background-color: rgba(52, 152, 219, 0.7);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        .control-btn:active {
+            background-color: rgba(41, 128, 185, 0.9);
         }
         #score {
             position: absolute;
@@ -253,9 +295,16 @@
         <div id="gym">GYM</div>
         <div id="score">Score: 0</div>
         
+        <div id="mobile-controls">
+            <div class="control-btn" id="btn-left">←</div>
+            <div class="control-btn" id="btn-up">↑</div>
+            <div class="control-btn" id="btn-down">↓</div>
+            <div class="control-btn" id="btn-right">→</div>
+        </div>
+        
         <div id="game-over">
             <h2>Game Over!</h2>
-            <p>Ha Ha Fat Idiot Zach Got Hit By Car!</p>
+            <p>Zach got hit by a car!</p>
             <button id="restart">Play Again</button>
         </div>
         
@@ -267,7 +316,7 @@
         
         <div id="start-screen">
             <h2>Help Zach Get to the Gym!</h2>
-            <p>Use the arrow keys or WASD to move Zach.</p>
+            <p>Use the arrow keys, WASD, or the on-screen buttons to move Zach.</p>
             <p>Avoid the cars and reach the gym on the other side.</p>
             <button id="start-button">Start Game</button>
         </div>
@@ -528,6 +577,147 @@
             if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].indexOf(e.key) > -1) {
                 e.preventDefault();
             }
+        });
+        
+        // Mobile controls
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+        
+        // Mobile control event handlers for touch events
+        function setupMobileControls() {
+            // Helper function to move Zach
+            function moveZach(direction) {
+                if (isGameOver || !gameRunning) return;
+                
+                switch(direction) {
+                    case 'left':
+                        zachX = Math.max(0, zachX - zachSpeed);
+                        break;
+                    case 'right':
+                        zachX = Math.min(570, zachX + zachSpeed);
+                        break;
+                    case 'up':
+                        zachY = Math.max(0, zachY - zachSpeed);
+                        break;
+                    case 'down':
+                        zachY = Math.min(470, zachY + zachSpeed);
+                        break;
+                }
+                
+                zach.style.left = zachX + 'px';
+                zach.style.top = zachY + 'px';
+            }
+            
+            // Touch event handlers
+            btnUp.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                btnUp.pressed = true;
+            });
+            
+            btnDown.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                btnDown.pressed = true;
+            });
+            
+            btnLeft.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                btnLeft.pressed = true;
+            });
+            
+            btnRight.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                btnRight.pressed = true;
+            });
+            
+            // Touch end handlers
+            btnUp.addEventListener('touchend', function() {
+                btnUp.pressed = false;
+            });
+            
+            btnDown.addEventListener('touchend', function() {
+                btnDown.pressed = false;
+            });
+            
+            btnLeft.addEventListener('touchend', function() {
+                btnLeft.pressed = false;
+            });
+            
+            btnRight.addEventListener('touchend', function() {
+                btnRight.pressed = false;
+            });
+            
+            // Click event handlers for easier testing on desktop
+            btnUp.addEventListener('mousedown', function() {
+                btnUp.pressed = true;
+            });
+            
+            btnDown.addEventListener('mousedown', function() {
+                btnDown.pressed = true;
+            });
+            
+            btnLeft.addEventListener('mousedown', function() {
+                btnLeft.pressed = true;
+            });
+            
+            btnRight.addEventListener('mousedown', function() {
+                btnRight.pressed = true;
+            });
+            
+            // Mouse up handlers
+            document.addEventListener('mouseup', function() {
+                btnUp.pressed = false;
+                btnDown.pressed = false;
+                btnLeft.pressed = false;
+                btnRight.pressed = false;
+            });
+            
+            // Continuous movement for touch controls
+            setInterval(function() {
+                if (btnUp.pressed) moveZach('up');
+                if (btnDown.pressed) moveZach('down');
+                if (btnLeft.pressed) moveZach('left');
+                if (btnRight.pressed) moveZach('right');
+            }, 50);
+        }
+        
+        // Check if the device is likely a mobile device
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 800;
+        }
+        
+        // Set initial visibility of mobile controls
+        function setMobileControlsVisibility() {
+            const mobileControls = document.getElementById('mobile-controls');
+            if (isMobile()) {
+                mobileControls.style.display = 'flex';
+            } else {
+                mobileControls.style.display = 'none';
+            }
+        }
+        
+        // Adjust game container size based on window size
+        function adjustGameSize() {
+            const gameContainer = document.getElementById('game-container');
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            // Set max width/height while maintaining aspect ratio
+            if (windowWidth < 640) {
+                gameContainer.style.height = Math.min(windowHeight - 100, 400) + 'px';
+            }
+        }
+        
+        // Call these functions initially
+        setMobileControlsVisibility();
+        adjustGameSize();
+        setupMobileControls();
+        
+        // Update when window is resized
+        window.addEventListener('resize', function() {
+            setMobileControlsVisibility();
+            adjustGameSize();
         });
         
         // Event listeners
