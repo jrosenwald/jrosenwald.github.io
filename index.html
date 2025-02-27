@@ -3,818 +3,552 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Unified Spacememory Network</title>
+    <title>Zach's Gym Journey</title>
     <style>
-        :root {
-            --primary-color: #3a86ff;
-            --secondary-color: #8338ec;
-            --accent-color: #ff006e;
-            --background: rgba(255, 255, 255, 0.8);
-            --glass-background: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-color: #333;
-            --light-text: #666;
-        }
-
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            overflow: hidden;
         }
-
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: var(--text-color);
-            min-height: 100vh;
-            background-attachment: fixed;
+        #game-container {
+            position: relative;
+            width: 600px;
+            height: 500px;
+            margin: 20px auto;
+            background-color: #82d173;
+            border: 3px solid #333;
+            overflow: hidden;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .road {
+            position: absolute;
+            width: 100%;
+            height: 50px;
+            background-color: #333;
         }
-
-        header {
-            background: var(--glass-background);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 20px 0;
+        .car {
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background-color: #e74c3c;
+            border-radius: 5px;
         }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 20px;
-            transition: all 0.3s;
-        }
-
-        nav a:hover, nav a.active {
-            background: var(--glass-border);
-        }
-
-        main {
-            padding: 40px 0;
-        }
-
-        .hero {
-            text-align: center;
-            color: white;
-            padding: 60px 0;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #00dbde, #fc00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 8s ease infinite;
-            background-size: 200% 200%;
-        }
-
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .tabs {
+        #gym {
+            position: absolute;
+            width: 80px;
+            height: 50px;
+            background-color: #9b59b6;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .tab-btn {
-            background: var(--glass-background);
-            border: 1px solid var(--glass-border);
+            align-items: center;
             color: white;
-            padding: 12px 24px;
-            cursor: pointer;
-            border-radius: 30px;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
+            font-weight: bold;
+            border-radius: 5px;
         }
-
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        .tab-btn.active {
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .glass-card {
-            background: var(--glass-background);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            color: white;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .glass-card h2 {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .glass-card h3 {
-            margin: 25px 0 15px;
-            font-size: 1.4rem;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .glass-card p {
-            line-height: 1.7;
-            margin-bottom: 15px;
-        }
-
-        .collapsible {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 10px;
-            padding: 15px;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: white;
-            margin-bottom: 10px;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .collapsible:after {
-            content: '+';
+        #game-over, #game-win {
             position: absolute;
-            right: 15px;
             top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-        }
-
-        .collapsible.active:after {
-            content: '-';
-        }
-
-        .collapsible:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .content {
-            padding: 0 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 0 0 10px 10px;
-            margin-bottom: 20px;
-        }
-
-        .content-inner {
-            padding: 15px 0;
-        }
-
-        .citation {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            padding: 2px 5px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            margin: 0 2px;
-            vertical-align: super;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 300px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            text-align: left;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
             left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .image-container {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .image-container img {
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .image-caption {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-        }
-
-        .references {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .references h3 {
-            margin-bottom: 15px;
-        }
-
-        .references ol {
-            padding-left: 20px;
-        }
-
-        .references li {
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-
-        footer {
-            background: var(--glass-background);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--glass-border);
-            padding: 20px 0;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
             color: white;
-            text-align: center;
-            margin-top: 50px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 100;
         }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .tab-btn {
-                font-size: 0.9rem;
-                padding: 10px 16px;
-            }
-            
-            .glass-card {
-                padding: 20px;
-            }
-            
-            .glass-card h2 {
-                font-size: 1.5rem;
-            }
-            
-            .glass-card h3 {
-                font-size: 1.2rem;
-            }
-            
-            nav ul {
-                gap: 10px;
-            }
-            
-            nav a {
-                padding: 6px 12px;
-                font-size: 0.9rem;
-            }
+        #restart, #restart-win {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #restart:hover, #restart-win:hover {
+            background-color: #2980b9;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 50;
+        }
+        #start-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #start-button:hover {
+            background-color: #27ae60;
+        }
+        
+        /* Zach smiley face styles */
+        #zach {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            z-index: 10;
+            transition: transform 0.1s;
+        }
+        
+        /* Zach's facial features */
+        .face {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Normal smile face */
+        .face.normal .mouth {
+            position: absolute;
+            width: 16px;
+            height: 8px;
+            border-bottom: 3px solid #333;
+            border-radius: 0 0 10px 10px;
+            bottom: 5px;
+            left: 7px;
+        }
+        
+        .face.normal .eyes {
+            position: absolute;
+            width: 20px;
+            height: 4px;
+            top: 10px;
+            left: 5px;
+        }
+        
+        .face.normal .eyes::before,
+        .face.normal .eyes::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #333;
+            border-radius: 50%;
+        }
+        
+        .face.normal .eyes::before {
+            left: 0;
+        }
+        
+        .face.normal .eyes::after {
+            right: 0;
+        }
+        
+        /* Scared face */
+        .face.scared .mouth {
+            position: absolute;
+            width: 16px;
+            height: 2px;
+            background-color: #333;
+            bottom: 8px;
+            left: 7px;
+        }
+        
+        .face.scared .eyes {
+            position: absolute;
+            width: 20px;
+            height: 4px;
+            top: 10px;
+            left: 5px;
+        }
+        
+        .face.scared .eyes::before,
+        .face.scared .eyes::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #333;
+            border-radius: 50%;
+        }
+        
+        .face.scared .eyes::before {
+            left: 0;
+        }
+        
+        .face.scared .eyes::after {
+            right: 0;
+        }
+        
+        /* Crying face */
+        .face.hit .mouth {
+            position: absolute;
+            width: 16px;
+            height: 8px;
+            border-top: 3px solid #333;
+            border-radius: 10px 10px 0 0;
+            bottom: 8px;
+            left: 7px;
+        }
+        
+        .face.hit .eyes {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            top: 8px;
+            left: 5px;
+        }
+        
+        .face.hit .eyes::before,
+        .face.hit .eyes::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 10px;
+            background-color: #3498db; /* Blue tears */
+            border-radius: 2px;
+        }
+        
+        .face.hit .eyes::before {
+            left: 0;
+        }
+        
+        .face.hit .eyes::after {
+            right: 0;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">SPACEMEMORY</div>
-            <nav>
-                <ul>
-                    <li><a href="#overview" class="active" data-tab-target="overview">Overview</a></li>
-                    <li><a href="#quantum-framework" data-tab-target="quantum-framework">Quantum Framework</a></li>
-                    <li><a href="#teleological-attractors" data-tab-target="teleological-attractors">Teleological Attractors</a></li>
-                    <li><a href="#consciousness" data-tab-target="consciousness">Consciousness</a></li>
-                    <li><a href="#philosophical" data-tab-target="philosophical">Philosophical Implications</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <div class="container">
-            <section class="hero">
-                <h1>The Unified Spacememory Network</h1>
-                <p>Exploring the revolutionary framework that connects cosmogenesis to consciousness through quantum geometry, information theory, and the holographic principle.</p>
-            </section>
-
-            <div class="tab-content active" id="overview">
-                <div class="glass-card">
-                    <h2>Understanding the Unified Spacememory Network</h2>
-                    <p>The Unified Spacememory Network (USN) represents a groundbreaking theoretical framework proposed by physicist Nassim Haramein and colleagues that redefines our understanding of spacetime, matter, information, and consciousness. The theory suggests that the fabric of reality is not simply an inert backdrop for physical events but rather a dynamic, interconnected information processing network with memory and learning capabilities inherent to its structure.</p>
-                    
-                    <button class="collapsible">Key Principles of the USN Model</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The USN model is built upon three foundational principles:</p>
-                            <p><strong>1. Constants of Nature as Information Relationships:</strong> Rather than arbitrary values, the fundamental constants of physics emerge from specific holographic and quantum information relationships in the universe.</p>
-                            <p><strong>2. Planck-Scale Architecture as Memory:</strong> At the smallest scale (Planck length), spacetime is comprised of polarizable electromagnetic quanta with the capacity to encode information, with non-zero hysteresis (memory).</p>
-                            <p><strong>3. Planck-Scale Wormhole Network:</strong> These quanta form a vast network of microscopic wormholes connecting all spacetime coordinates, mediating nonlocal correlations throughout the universe.</p>
-                        </div>
-                    </div>
-                    
-                    <h3>From Quantum Geometry to Consciousness</h3>
-                    <p>The USN model proposes that consciousness is not an emergent accident of complex biological systems but rather an intrinsic property of the universe itself, arising from the information dynamics of spacetime's geometric structure. This perspective bridges traditional divides between physics and philosophy, suggesting that awareness, memory, and purposeful evolution are fundamental to reality at all scales.</p>
-                    
-                    <div class="image-container">
-                        <img src="/api/placeholder/800/400" alt="Planck-scale wormhole network visualization">
-                        <div class="image-caption">Conceptual visualization of the Planck-scale micro-wormhole network connecting all points in spacetime</div>
-                    </div>
-                    
-                    <button class="collapsible">Historical Context & Scientific Significance</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The USN theory builds upon and extends several key developments in theoretical physics:</p>
-                            <p>• Wheeler's concept of "spacetime foam" and "it from bit" (information as fundamental)</p>
-                            <p>• Holographic principle (Bekenstein, 't Hooft, Susskind)</p>
-                            <p>• ER=EPR correspondence (Maldacena & Susskind)</p>
-                            <p>• Quantum gravity approaches</p>
-                            <p>• Penrose-Hameroff Orchestrated Objective Reduction theory</p>
-                            <p>The USN model represents an attempt to synthesize these diverse approaches into a coherent framework that addresses fundamental questions about the nature of reality, consciousness, and the directionality observed in evolutionary processes.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <h2>Quantum Gravity and the Holographic Mass</h2>
-                    <p>A cornerstone of the USN framework is Haramein's Quantum Gravity and the Holographic Mass (QGHM) theory, which provides a quantized solution to gravity in terms of Planck Spherical Units (PSUs) through a holographic approach. This model successfully derives the precise mass and radius of the proton from first principles, demonstrating remarkable accuracy when compared to experimental measurements.</p>
-                    
-                    <button class="collapsible">The Mathematics of Holographic Information Density</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The QGHM model presents a series of equations that relate the vacuum energy density, surface-to-volume ratios, and information content at the Planck scale. Key relationships include:</p>
-                            <p>• The Planck Spherical Unit (PSU) volume calculation</p>
-                            <p>• The relationship between PSU packing and vacuum energy density</p>
-                            <p>• The holographic ratio between surface information bits and interior information</p>
-                            <p>• The derivation of mass as a function of this holographic ratio</p>
-                            <p>These equations demonstrate that the mass-energy of a proton emerges from the information relationship between its surface area (covered by ~10^40 Planck units) and the interior vacuum energy density.</p>
-                        </div>
-                    </div>
-                    
-                    <h3>The Micro-Wormhole Network</h3>
-                    <p>The QGHM theory suggests that each Planck-scale unit in spacetime satisfies the Schwarzschild solution of an Einstein-Rosen bridge (wormhole). This implies that space at the fundamental level consists of approximately 10^40 micro-wormhole terminations over the surface of each proton, creating a vast interconnected network throughout the cosmos. This network provides a physical mechanism for quantum entanglement and nonlocal phenomena.</p>
-                </div>
-            </div>
-
-            <div class="tab-content" id="quantum-framework">
-                <div class="glass-card">
-                    <h2>The Quantum Geometry of Spacememory</h2>
-                    <p>At the heart of the Unified Spacememory Network lies a revolutionary conception of spacetime as a quantized, information-rich structure with memory capabilities. This section explores the fundamental quantum framework that underpins the USN model.</p>
-                    
-                    <h3>Quantized Spacetime Architecture</h3>
-                    <p>The USN model proposes that at the Planck scale (approximately 10^-35 meters), space is not continuous but composed of discrete units called Planck Spherical Units (PSUs). These units serve as the fundamental "pixels" or "voxels" of spacetime and can encode information. The model mathematically demonstrates how these PSUs tile across the surface of elementary particles, creating a holographic relationship between surface information and interior energy density.</p>
-                    
-                    <button class="collapsible">Planck Spherical Units as Information Carriers</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>Each PSU represents a fundamental unit of both space and information. The theory calculates the precise volume of a PSU as:</p>
-                            <p><em>V<sub>ℓs</sub> = (4/3)πℓ<sub>r</sub>^3 = 2.21 × 10^-99 cm^3</em></p>
-                            <p>Where ℓ<sub>r</sub> is the Planck radius. These units collectively form the information architecture of spacetime, with each unit potentially functioning as a binary bit or qubit.</p>
-                            <p>The quantum vacuum energy density ρ can then be calculated in terms of PSUs:</p>
-                            <p><em>ρ = m<sub>ℓ</sub>/V<sub>ℓs</sub> = 9.86 × 10^93 g/cm^3</em></p>
-                            <p>Where m<sub>ℓ</sub> is the Planck mass. This extraordinary energy density represents the fundamental information-energy equivalence at the Planck scale.</p>
-                        </div>
-                    </div>
-                    
-                    <h3>The Holographic Principle in Action</h3>
-                    <p>Following the holographic principle proposed by 't Hooft and Susskind, the USN model suggests that the information content of any three-dimensional volume can be encoded on its two-dimensional boundary. Haramein's work extends this by defining the holographic bit of information as the equatorial disc of the oscillating PSU. This creates a precise mathematical relationship between surface information and interior energy:</p>
-                    
-                    <p>The ratio of the holographic information bits to the spherical surface is defined as:</p>
-                    <p><em>η = A<sub>s</sub>/A<sub>ℓc</sub></em></p>
-                    <p>Where A<sub>s</sub> is the surface area of the spherical body and A<sub>ℓc</sub> is the area of the PSU equatorial disc.</p>
-                    
-                    <div class="image-container">
-                        <img src="/api/placeholder/800/400" alt="Holographic encoding visualization">
-                        <div class="image-caption">Visualization of holographic information encoding at the Planck scale, with surface bits mapping to volume information</div>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <h2>Planckian Wormhole Network: The Physical Basis for Entanglement</h2>
-                    <p>One of the most groundbreaking aspects of the USN model is its proposal that quantum entanglement can be explained through a physical mechanism: micro-wormholes at the Planck scale connecting spatially separated particles.</p>
-                    
-                    <h3>Einstein-Rosen Bridges at the Planck Scale</h3>
-                    <p>The USN model proposes that each PSU satisfies the Schwarzschild solution to Einstein's field equations, specifically the Einstein-Rosen bridge configuration. According to the mathematical formulation:</p>
-                    <p><em>ℓ<sub>r</sub> ≪ 2Gm<sub>ℓ</sub>/c^2</em></p>
-                    <p>This implies that there are approximately 4.33 × 10^40 wormhole terminations over the surface horizon of each proton. These micro-wormholes create a vast network of connections throughout spacetime.</p>
-                    
-                    <button class="collapsible">ER=EPR Correspondence: Wormholes and Entanglement</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>Building on work by Maldacena and Susskind, the USN model supports the equivalence between wormholes (Einstein-Rosen bridges, or ER) and quantum entanglement (Einstein-Podolsky-Rosen correlations, or EPR). This "ER=EPR" correspondence suggests that entangled particles are connected through microscopic wormholes in the fabric of spacetime.</p>
-                            <p>Key implications include:</p>
-                            <p>• Nonlocality is explained through physical connections in spacetime geometry</p>
-                            <p>• Quantum correlations represent information exchange through the wormhole network</p>
-                            <p>• The "spooky action at a distance" that troubled Einstein has a geometric explanation</p>
-                            <p>This perspective bridges quantum mechanics and general relativity, two frameworks that have been notoriously difficult to reconcile.</p>
-                        </div>
-                    </div>
-                    
-                    <h3>Network Connectivity and Cosmological Implications</h3>
-                    <p>If each proton is connected to others through this micro-wormhole network, the model suggests that there exists a geometric network connecting all ~10^80 protons in the observable universe. This universal connectivity has profound implications for information processing, memory, and the evolution of physical systems at all scales.</p>
-                </div>
-            </div>
-
-            <div class="tab-content" id="teleological-attractors">
-                <div class="glass-card">
-                    <h2>Teleological Attractors: Purpose in an Evolving Universe</h2>
-                    <p>One of the most philosophically significant aspects of the Unified Spacememory Network model is its reintroduction of apparent purpose or teleology into the evolution of physical and biological systems. Unlike traditional teleological arguments that invoke supernatural design, the USN model proposes that directionality emerges naturally from the nonlocal information dynamics of the spacememory network.</p>
-                    
-                    <h3>The Improbability Problem</h3>
-                    <p>The paper highlights a fundamental challenge in explaining the emergence of complex, highly ordered systems: the astronomical improbability of their formation through purely random processes. Examples include:</p>
-                    
-                    <p>• The ribosomal RNA molecule, which has approximately 10^8896 possible configurations</p>
-                    <p>• The specific values of physical constants necessary for life</p>
-                    <p>• The emergence of self-replicating systems</p>
-                    
-                    <p>Traditional explanations invoke either random chance (requiring nearly infinite universes or time) or intelligent design. The USN model offers an alternative explanation based on nonlocal information dynamics.</p>
-                    
-                    <button class="collapsible">The Rubik's Cube Analogy</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The paper presents a powerful analogy using a Rubik's cube puzzle:</p>
-                            <p>• A blind person solving a Rubik's cube without feedback would take approximately 5×10^18 seconds (158 billion years) to complete it by random attempts</p>
-                            <p>• The same person with simple yes/no feedback after each move could solve it in approximately 2 minutes</p>
-                            <p>This analogy illustrates how information feedback dramatically changes the probability landscape for complex systems development.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="image-container">
-                        <img src="/api/placeholder/800/400" alt="Evolutionary pathways visualization">
-                        <div class="image-caption">Visualization of evolutionary pathways with and without nonlocal information influence</div>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <h2>Retrocausality and Temporal Nonlocality</h2>
-                    <p>A revolutionary aspect of the USN model is its proposal that temporal nonlocality—information exchange across time—may influence the development of physical systems. This suggests a form of retrocausality that alters the probability landscape of evolutionary pathways.</p>
-                    
-                    <h3>The Mechanism of Temporal Influence</h3>
-                    <p>According to the USN model, the Planckian wormhole network connects not only spatially separated points but also temporally separated events. This creates a feedback loop across time that may influence the development of systems toward greater complexity and organizational synergy.</p>
-                    
-                    <button class="collapsible">Advanced Potentials: Wheeler-Feynman Absorber Theory</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The USN model draws parallels to the Wheeler-Feynman absorber theory, which proposes both retarded (past to future) and advanced (future to past) electromagnetic potentials. According to this perspective:</p>
-                            <p>• Future states of a system can influence its past development</p>
-                            <p>• Complex, ordered systems may "attract" their own formation through temporal feedback</p>
-                            <p>• This creates an apparent directionality or "pull" toward greater complexity without violating physical laws</p>
-                        </div>
-                    </div>
-                    
-                    <h3>Negentropy and Order from Chaos</h3>
-                    <p>The USN model suggests that the temporal nonlocal interactions create a negentropic effect—a tendency toward greater order and complexity that counters the typical entropic trends predicted by the second law of thermodynamics. This aligns with observations by complexity theorists like Stuart Kauffman and Ilya Prigogine regarding self-organizing systems.</p>
-                    
-                    <p>Through this framework, the emergence of complex systems—from stars and galaxies to DNA and brains—can be understood as natural manifestations of the universe's underlying information dynamics rather than improbable accidents.</p>
-                </div>
-            </div>
-
-            <div class="tab-content" id="consciousness">
-                <div class="glass-card">
-                    <h2>Consciousness: An Intrinsic Property of Spacetime</h2>
-                    <p>The Unified Spacememory Network offers a radical reconceptualization of consciousness, proposing that awareness is not merely an epiphenomenon of complex neural activity but an intrinsic property of spacetime itself. This perspective aligns with panpsychist philosophical traditions while providing a potential physical mechanism for how consciousness manifests across scales.</p>
-                    
-                    <h3>The Information Basis of Consciousness</h3>
-                    <p>According to the USN model, consciousness emerges from three fundamental properties of the Planckian wormhole network:</p>
-                    
-                    <p>1. <strong>Intercommunicativity:</strong> The ability for information to be exchanged throughout the network</p>
-                    <p>2. <strong>Memory:</strong> The capacity to encode and store information with temporal persistence (hysteresis)</p>
-                    <p>3. <strong>Responsiveness:</strong> The ability to adapt and evolve based on feedback mechanisms</p>
-                    
-                    <p>These properties exist at the fundamental level of spacetime and scale up to create increasingly complex forms of awareness in physical systems.</p>
-                    
-                    <button class="collapsible">Levels of Consciousness Across Scales</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The USN model suggests a spectrum of consciousness across different scales:</p>
-                            <p>• <strong>Planck scale:</strong> Proto-conscious phenomena in the fundamental wormhole network</p>
-                            <p>• <strong>Particle scale:</strong> Elementary forms of information processing and "experience"</p>
-                            <p>• <strong>Molecular scale:</strong> More complex information integration through quantum effects</p>
-                            <p>• <strong>Cellular scale:</strong> Coordinated information processing through macromolecular assemblies</p>
-                            <p>• <strong>Organism scale:</strong> Integrated consciousness through neural networks and other systems</p>
-                            <p>• <strong>Cosmic scale:</strong> Universal consciousness through the integrated Planckian network</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <h2>The Binding Problem: Unified Experience</h2>
-                    <p>One of the most persistent challenges in consciousness studies is explaining how disparate neural processes integrate to form a unified conscious experience—known as the binding problem. The USN model offers a novel solution through the Planckian wormhole network.</p>
-                    
-                    <h3>Nonlocal Binding Through the Micro-Wormhole Network</h3>
-                    <p>In the USN framework, the biological structures of the brain (particularly microtubules as highlighted in the Penrose-Hameroff Orchestrated Objective Reduction theory) harness the nonlocal connectivity of the Planckian wormhole network. This creates a binding mechanism that transcends the limitations of neural transmission speeds.</p>
-                    
-                    <p>Key aspects of this binding mechanism include:</p>
-                    
-                    <p>• Quantum coherence in macromolecular structures like microtubules</p>
-                    <p>• Coupling of biological water molecules to the quantum electromagnetic field</p>
-                    <p>• Integration of information across spatially separated brain regions through the wormhole network</p>
-                    
-                    <button class="collapsible">The Role of Ordered Water in Consciousness</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The USN model emphasizes the critical role of water in consciousness, not as a passive medium but as an active participant in quantum coherence:</p>
-                            <p>• Water molecules within and around microtubules form quantum electrodynamic cavities that shield quantum coherence from thermal decoherence
-                            <p>• Atomically ordered water mediates the specific interaction of proteins with their substrates</p>
-                            <p>• Water acts as an intermediary between electromagnetic fields and biomolecular information processing</p>
-                            <p>The paper states: "Far from the classical paradigm – water is not an inert theater in which the machinations of biochemistry unfold, instead it is much more so the director."</p>
-                        </div>
-                    </div>
-                    
-                    <div class="image-container">
-                        <img src="/api/placeholder/800/400" alt="Microtubule quantum coherence visualization">
-                        <div class="image-caption">Visualization of quantum coherence in microtubules facilitated by ordered water and the micro-wormhole network</div>
-                    </div>
-                </div>
-                
-                <div class="glass-card">
-                    <h2>Resolving the Hard Problem</h2>
-                    <p>David Chalmers famously articulated the "hard problem" of consciousness: explaining why physical processes in the brain give rise to subjective experience. The USN model offers a novel approach to this persistent philosophical challenge.</p>
-                    
-                    <h3>The Continuum of Inner and Outer Experience</h3>
-                    <p>The USN model dissolves the traditional dichotomy between objective external reality and subjective internal experience. Instead, it proposes that:</p>
-                    
-                    <p>"The information processing events taking place within the synaptic and subcellular networks of the organism are not only strongly correlated within, but entangled with the external environment as well... This means that quantum critical events within the subcellular macromolecular environments of the organism are connected with 'external' events to a much higher degree than would classically be anticipated."</p>
-                    
-                    <button class="collapsible">Subjective Qualia as Objective Phenomena</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>A revolutionary implication of the USN model is that subjective experiences (qualia) like the sensation of "blueness" are not merely internal representations but have an objective reality in the universe's information field:</p>
-                            <p>"The universe 'knows' subjective qualia, such as the color blue, through our experience of the color blue, and in this way putatively subjective qualia have an external objective reality."</p>
-                            <p>This perspective moves beyond both materialist reductionism (which struggles to explain subjective experience) and dualism (which struggles to explain mind-body interaction) by grounding consciousness in the fundamental information dynamics of spacetime itself.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-content" id="philosophical">
-                <div class="glass-card">
-                    <h2>Cosmological Implications: A Living Universe</h2>
-                    <p>The Unified Spacememory Network model suggests a fundamental reconceptualization of the universe itself—not as a mechanical system operating according to blind laws, but as something more akin to a living system with intrinsic properties of memory, learning, and purposeful development.</p>
-                    
-                    <h3>Biological Cosmogenesis</h3>
-                    <p>The USN model proposes the concept of "biological cosmogenesis"—the idea that the universe's evolution can be understood through principles similar to those found in living systems:</p>
-                    
-                    <p>"The process of cosmogenesis can be equated with a living, or biological process of iterative evolutionary development – biological cosmogenesis. In this sense, there are living processes occurring at all scales of the Universe, and with memory and learning being functions of awareness – life and consciousness become intrinsic ubiquitous characteristics, embedded in the very dynamics and mechanics of physical processes of spacetime and thus, the Universe itself."</p>
-                    
-                    <button class="collapsible">Self-Organizing Principles Across Scales</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The USN model identifies several principles that operate across scales from subatomic particles to galaxies to biological organisms:</p>
-                            <p>• <strong>Information Feedback Loops:</strong> Recursive processes that enable learning and adaptation</p>
-                            <p>• <strong>Memory Encoding:</strong> The capacity to store information about past states</p>
-                            <p>• <strong>Nonlocal Connectivity:</strong> Integration of information across spatiotemporal domains</p>
-                            <p>• <strong>Evolutionary Tendency:</strong> Development toward higher levels of ordering and complexity</p>
-                            <p>These principles suggest that evolution, intelligence, and purpose—traditionally associated only with biological life—may in fact be fundamental properties of the cosmos.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="image-container">
-                        <img src="/api/placeholder/800/400" alt="Nested fractal systems visualization">
-                        <div class="image-caption">Visualization of nested fractal systems exhibiting similar organizational principles across cosmic, cellular, and subatomic scales</div>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <h2>Reconciling Science and Spirituality: The Concept of "God"</h2>
-                    <p>While the USN framework is firmly grounded in physics and mathematical formulations, it has profound implications for philosophical and theological questions about the nature of ultimate reality and concepts traditionally associated with "God."</p>
-                    
-                    <h3>A Universal Intelligence</h3>
-                    <p>The USN model suggests that intelligence and awareness are not accidental byproducts of complexity but fundamental aspects of reality itself. This perspective aligns with certain theological concepts while reconceptualizing them in scientific terms:</p>
-                    
-                    <p>• <strong>Omnipresence:</strong> The micro-wormhole network connects all points in spacetime</p>
-                    <p>• <strong>Omniscience:</strong> Information is holographically encoded and accessible throughout the network</p>
-                    <p>• <strong>Creative Force:</strong> The ordering dynamic that drives systems toward higher complexity</p>
-                    
-                    <button class="collapsible">Beyond the Mechanistic Paradigm</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>The USN model moves beyond the purely mechanistic conception of the universe that has dominated modern science:</p>
-                            <p>"The purely mechanical idea of matter and energy interacting like clockwork under the auspices of the unmalleable laws of physics have since evolved into the concept of the dynamical interactivity of systems, represented not only as an exchange of matter and energy, but as well, of information."</p>
-                            <p>This shift acknowledges that purpose, meaning, and intelligence may be intrinsic to the fabric of reality rather than being merely human projections onto an indifferent cosmos.</p>
-                        </div>
-                    </div>
-                    
-                    <h3>The Divine as Emergent</h3>
-                    <p>Rather than positing a transcendent creator separate from creation, the USN model suggests a perspective more aligned with certain mystical traditions in which the divine is understood as immanent and emergent:</p>
-                    
-                    <p>The universe, through its evolutionary development toward greater complexity and consciousness, may be understood as a system becoming increasingly aware of itself. Human consciousness, in this framework, represents not a separation from nature but a particular expression of the universe's intrinsic capacity for self-awareness.</p>
-                </div>
-
-                <div class="glass-card">
-                    <h2>A Neural Network Cosmos</h2>
-                    <p>One of the most compelling metaphors suggested by the USN model is that of the universe as a vast neural network, with striking parallels between cosmic structures and biological neural systems.</p>
-                    
-                    <h3>Structural and Functional Similarities</h3>
-                    <p>The USN model highlights several parallels between cosmic structures and neural networks:</p>
-                    
-                    <p>• <strong>Network Topology:</strong> The filamentary structure of the cosmic web resembles the network of neurons in the brain</p>
-                    <p>• <strong>Information Processing:</strong> Both systems integrate information across vast scales</p>
-                    <p>• <strong>Memory Storage:</strong> Both encode information holographically across distributed networks</p>
-                    <p>• <strong>Learning Capacity:</strong> Both adapt and evolve based on feedback mechanisms</p>
-                    
-                    <button class="collapsible">The Universe as a Learning System</button>
-                    <div class="content">
-                        <div class="content-inner">
-                            <p>If the universe functions analogously to a neural network, this suggests it may possess properties associated with learning systems:</p>
-                            <p>• The capacity to develop increasingly sophisticated patterns of self-organization</p>
-                            <p>• The ability to "learn" from previous configurations through spacememory feedback</p>
-                            <p>• The potential to develop increasingly complex forms of consciousness as the network evolves</p>
-                            <p>This perspective suggests that cosmic evolution may be understood as a vast learning process in which the universe explores its own potentialities through increasingly complex forms of organization and awareness.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="image-container">
-                        <img src="/api/placeholder/800/400" alt="Cosmic neural network comparison">
-                        <div class="image-caption">Comparison between cosmic web structure and neural networks, highlighting structural and functional similarities</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card">
-                <h2>Experimental Evidence and Testable Predictions</h2>
-                <p>While the Unified Spacememory Network represents a theoretical framework that extends beyond current experimental capabilities, it makes several testable predictions and builds upon existing empirical observations.</p>
-                
-                <h3>Supporting Evidence</h3>
-                <p>The USN model draws support from several empirical observations:</p>
-                
-                <p>• <strong>Quantum Nonlocality:</strong> The experimentally verified phenomenon of quantum entanglement</p>
-                <p>• <strong>Quantum Effects in Biology:</strong> Evidence of quantum coherence in photosynthesis and other biological processes</p>
-                <p>• <strong>Proton Radius Prediction:</strong> The QGHM model's accurate prediction of the proton charge radius</p>
-                <p>• <strong>Organizational Principles:</strong> The observed tendency toward self-organization in complex systems</p>
-                
-                <button class="collapsible">Testable Predictions</button>
-                <div class="content">
-                    <div class="content-inner">
-                        <p>The USN model makes several predictions that could potentially be tested:</p>
-                        <p>1. <strong>Quantum Coherence in Neural Structures:</strong> The model predicts that quantum coherence plays a functional role in neural processes, particularly in microtubules and ordered water structures.</p>
-                        <p>2. <strong>Nonlocal Information Transfer:</strong> The model suggests that under certain conditions, information transfer might be observed that exceeds classical limitations.</p>
-                        <p>3. <strong>Retrocausal Effects:</strong> The model predicts subtle influences from future states on present configurations in certain quantum systems.</p>
-                        <p>4. <strong>Holographic Organization:</strong> The model predicts specific mathematical relationships between surface and volume information content in physical systems.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card">
-                <h3>References</h3>
-                <ol class="references">
-                    <li>Haramein, N., Brown, W. D., & Val Baker, A. (2016). The Unified Spacememory Network: from Cosmogenesis to Consciousness. NeuroQuantology, 14(4).</li>
-                    <li>Haramein, N. (2013). Quantum Gravity and the Holographic Mass. Physical Review & Research International, 3(4), 270-292.</li>
-                    <li>Maldacena, J., & Susskind, L. (2013). Cool horizons for entangled black holes. Fortschritte der Physik, 61(9), 781-811.</li>
-                    <li>Penrose, R., & Hameroff, S. (2014). Consciousness in the universe: A review of the 'Orch OR' theory. Physics of Life Reviews, 11(1), 39-78.</li>
-                    <li>Bekenstein, J. D. (1973). Black holes and entropy. Physical Review D, 7(8), 2333.</li>
-                    <li>'t Hooft, G. (2001). The Holographic Principle. arXiv:hep-th/0003004.</li>
-                    <li>Wheeler, J. A. (1990). Information, physics, quantum: The search for links. In W. H. Zurek (Ed.), Complexity, Entropy, and the Physics of Information. Addison-Wesley.</li>
-                </ol>
+    <h1>Zach's Gym Journey</h1>
+    <div id="game-container">
+        <div id="zach">
+            <div class="face normal">
+                <div class="eyes"></div>
+                <div class="mouth"></div>
             </div>
         </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>The Unified Spacememory Network: From Cosmogenesis to Consciousness | An exploration of Nassim Haramein's revolutionary framework</p>
+        <div id="gym">GYM</div>
+        <div id="score">Score: 0</div>
+        
+        <div id="game-over">
+            <h2>Game Over!</h2>
+            <p>Ha Ha Fat Idiot Zach Got Hit By Car!</p>
+            <button id="restart">Play Again</button>
         </div>
-    </footer>
-
+        
+        <div id="game-win">
+            <h2>You Win!</h2>
+            <p>Zach made it to the gym safely!</p>
+            <button id="restart-win">Play Again</button>
+        </div>
+        
+        <div id="start-screen">
+            <h2>Help Zach Get to the Gym!</h2>
+            <p>Use the arrow keys or WASD to move Zach.</p>
+            <p>Avoid the cars and reach the gym on the other side.</p>
+            <button id="start-button">Start Game</button>
+        </div>
+    </div>
+    
     <script>
-        // Tab switching functionality
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
+        // Game elements
+        const gameContainer = document.getElementById('game-container');
+        const zach = document.getElementById('zach');
+        const zachFace = zach.querySelector('.face');
+        const gym = document.getElementById('gym');
+        const gameOver = document.getElementById('game-over');
+        const gameWin = document.getElementById('game-win');
+        const scoreDisplay = document.getElementById('score');
+        const startScreen = document.getElementById('start-screen');
+        const startButton = document.getElementById('start-button');
+        const restartButton = document.getElementById('restart');
+        const restartWinButton = document.getElementById('restart-win');
         
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.getAttribute('data-tab');
-                
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                
-                btn.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
+        // Game variables
+        let zachX = 20;
+        let zachY = 450;
+        let zachSpeed = 10;
+        let isGameOver = false;
+        let score = 0;
+        let roads = [];
+        let cars = [];
+        let gameRunning = false;
+        let gameLoop;
         
-        // Navigation links
-        const navLinks = document.querySelectorAll('nav a');
+        // Set initial position
+        zach.style.left = zachX + 'px';
+        zach.style.top = zachY + 'px';
         
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-                
-                const targetTab = link.getAttribute('data-tab-target');
-                
-                // Clear all active tabs and set the matching one as active
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                
-                // Activate the corresponding tab content
-                document.getElementById(targetTab).classList.add('active');
-            });
-        });
+        // Initialize the game
+        function initGame() {
+            // Reset player position
+            zachX = 20;
+            zachY = 450;
+            zach.style.left = zachX + 'px';
+            zach.style.top = zachY + 'px';
+            
+            // Set normal face
+            updateFace('normal');
+            
+            // Clear existing roads and cars
+            roads.forEach(road => road.remove());
+            cars.forEach(car => car.remove());
+            roads = [];
+            cars = [];
+            
+            // Create roads
+            createRoad(100);
+            createRoad(200);
+            createRoad(300);
+            createRoad(400);
+            
+            // Reset game state
+            isGameOver = false;
+            score = 0;
+            updateScore();
+            
+            // Hide game over and win screens
+            gameOver.style.display = 'none';
+            gameWin.style.display = 'none';
+        }
         
-        // Collapsible functionality
-        const coll = document.getElementsByClassName("collapsible");
+        // Update Zach's face
+        function updateFace(faceType) {
+            zachFace.className = 'face ' + faceType;
+        }
         
-        for (let i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function() {
-                this.classList.toggle("active");
-                const content = this.nextElementSibling;
-                if (content.style.maxHeight) {
-                    content.style.maxHeight = null;
+        // Create a road
+        function createRoad(yPos) {
+            const road = document.createElement('div');
+            road.className = 'road';
+            road.style.top = yPos + 'px';
+            gameContainer.appendChild(road);
+            roads.push(road);
+            
+            // Create initial cars for this road
+            createCar(yPos, Math.random() * 550, (yPos % 200 === 0) ? -1 : 1);
+            createCar(yPos, Math.random() * 250, (yPos % 200 === 0) ? -1 : 1);
+        }
+        
+        // Create a car
+        function createCar(roadY, startX, direction) {
+            const car = document.createElement('div');
+            car.className = 'car';
+            car.style.top = (roadY + 10) + 'px';
+            car.style.left = startX + 'px';
+            car.direction = direction;
+            car.speed = 2 + Math.random() * 3; // Random speed
+            
+            // Add car details
+            if (Math.random() > 0.5) {
+                car.style.backgroundColor = '#e74c3c'; // Red car
+            } else {
+                car.style.backgroundColor = '#f39c12'; // Orange car
+            }
+            
+            gameContainer.appendChild(car);
+            cars.push(car);
+        }
+        
+        // Update car positions
+        function updateCars() {
+            cars.forEach((car, index) => {
+                let carX = parseFloat(car.style.left);
+                carX += car.direction * car.speed;
+                
+                // If car goes off-screen, remove it and create a new one
+                if ((car.direction > 0 && carX > 600) || (car.direction < 0 && carX < -50)) {
+                    car.remove();
+                    cars.splice(index, 1);
+                    
+                    // Get the road position from the car
+                    const roadY = parseFloat(car.style.top) - 10;
+                    
+                    // Create a new car on the opposite side
+                    createCar(roadY, car.direction > 0 ? -50 : 600, car.direction);
                 } else {
-                    content.style.maxHeight = content.scrollHeight + "px";
+                    car.style.left = carX + 'px';
                 }
             });
         }
+        
+        // Check for collisions and proximity
+        function checkCollisions() {
+            // Player rectangle
+            const zachRect = {
+                x: zachX,
+                y: zachY,
+                width: 30,
+                height: 30
+            };
+            
+            // Flag to check if player is near any car
+            let isNearCar = false;
+            
+            // Check collision with cars
+            for (const car of cars) {
+                const carRect = {
+                    x: parseFloat(car.style.left),
+                    y: parseFloat(car.style.top),
+                    width: 50,
+                    height: 30
+                };
+                
+                // Check for collision
+                if (
+                    zachRect.x < carRect.x + carRect.width &&
+                    zachRect.x + zachRect.width > carRect.x &&
+                    zachRect.y < carRect.y + carRect.height &&
+                    zachRect.y + zachRect.height > carRect.y
+                ) {
+                    // Show crying face
+                    updateFace('hit');
+                    // Shake animation
+                    zach.style.transform = 'translateX(-5px)';
+                    setTimeout(() => { zach.style.transform = 'translateX(5px)'; }, 100);
+                    setTimeout(() => { zach.style.transform = 'translateX(0)'; }, 200);
+                    
+                    gameOver.style.display = 'block';
+                    isGameOver = true;
+                    clearInterval(gameLoop);
+                    return;
+                }
+                
+                // Check for proximity (within 70 pixels)
+                const dx = (zachRect.x + zachRect.width/2) - (carRect.x + carRect.width/2);
+                const dy = (zachRect.y + zachRect.height/2) - (carRect.y + carRect.height/2);
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < 70) {
+                    isNearCar = true;
+                }
+            }
+            
+            // Update face based on proximity
+            if (isNearCar && !isGameOver) {
+                updateFace('scared');
+            } else if (!isGameOver) {
+                updateFace('normal');
+            }
+            
+            // Check if player reached the gym
+            const gymRect = {
+                x: parseFloat(gym.style.left) || 510,
+                y: parseFloat(gym.style.top) || 10,
+                width: 80,
+                height: 50
+            };
+            
+            if (
+                zachRect.x < gymRect.x + gymRect.width &&
+                zachRect.x + zachRect.width > gymRect.x &&
+                zachRect.y < gymRect.y + gymRect.height &&
+                zachRect.y + zachRect.height > gymRect.y
+            ) {
+                gameWin.style.display = 'block';
+                isGameOver = true;
+                clearInterval(gameLoop);
+            }
+        }
+        
+        // Update score
+        function updateScore() {
+            score++;
+            scoreDisplay.textContent = 'Score: ' + score;
+        }
+        
+        // Game loop
+        function startGameLoop() {
+            gameLoop = setInterval(() => {
+                if (!isGameOver) {
+                    updateCars();
+                    checkCollisions();
+                    updateScore();
+                }
+            }, 50);
+        }
+        
+        // Handle keyboard input
+        function handleKeydown(e) {
+            if (isGameOver || !gameRunning) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                case 'a':
+                case 'A':
+                    zachX = Math.max(0, zachX - zachSpeed);
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                case 'D':
+                    zachX = Math.min(570, zachX + zachSpeed);
+                    break;
+                case 'ArrowUp':
+                case 'w':
+                case 'W':
+                    zachY = Math.max(0, zachY - zachSpeed);
+                    break;
+                case 'ArrowDown':
+                case 's':
+                case 'S':
+                    zachY = Math.min(470, zachY + zachSpeed);
+                    break;
+            }
+            
+            zach.style.left = zachX + 'px';
+            zach.style.top = zachY + 'px';
+        }
+        
+        // Additional event listeners for better control
+        window.addEventListener('keydown', function(e) {
+            // Prevent scrolling with arrow keys
+            if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].indexOf(e.key) > -1) {
+                e.preventDefault();
+            }
+        });
+        
+        // Event listeners
+        document.addEventListener('keydown', handleKeydown);
+        
+        restartButton.addEventListener('click', () => {
+            initGame();
+            startGameLoop();
+        });
+        
+        restartWinButton.addEventListener('click', () => {
+            initGame();
+            startGameLoop();
+        });
+        
+        startButton.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            gameRunning = true;
+            initGame();
+            startGameLoop();
+        });
     </script>
 </body>
 </html>
