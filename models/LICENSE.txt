@@ -1,0 +1,4 @@
+head.obj was created by Drummyfish and released under CC0 1.0.
+Source: https://opengameart.org/content/brain-and-skull
+
+This site loads only the brain object from the source OBJ.
