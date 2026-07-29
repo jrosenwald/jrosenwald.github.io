@@ -255,8 +255,12 @@ void main() {
 
             void main() {
               vec3 ultrasoundLime = vec3(0.91, 1.0, 0.60);
-              vec3 echoIce = vec3(0.66, 0.91, 1.0);
-              vec3 signalColor = mix(ultrasoundLime, echoIce, vRipple * 0.12);
+              vec3 echoIce = vec3(0.34, 0.86, 1.0);
+              vec3 signalColor = mix(
+                ultrasoundLime,
+                echoIce,
+                0.68 + vRipple * 0.16
+              );
               float signal = vBand * (0.72 + vRipple * 0.28) * uStrength;
               if (signal < 0.002) discard;
               gl_FragColor = vec4(signalColor, signal);
